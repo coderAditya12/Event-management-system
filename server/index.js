@@ -1,7 +1,9 @@
 import express from "express";
 import cors from "cors";
 import { createServer } from "http";
-
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+dotenv.config();
 
 import connectToSocket from "./config/socket.js";
 const app = express();
@@ -15,6 +17,12 @@ app.use(
     methods: "GET, POST, PUT, DELETE",
   })
 );
+mongoose
+  .connect(process.env.MONGO_URL)
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((error) => console.error(error));
 app.use(express.json());
 
 app.get("/", (req, res) => {
