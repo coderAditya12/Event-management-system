@@ -1,4 +1,5 @@
 import express from "express";
+import authRoute from "./routes/auth.route.js";
 import cors from "cors";
 import { createServer } from "http";
 import mongoose from "mongoose";
@@ -24,6 +25,17 @@ mongoose
   })
   .catch((error) => console.error(error));
 app.use(express.json());
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "internal server error";
+  res.status(statusCode).json({
+    success: false,
+    statusCode,
+    message,
+  });
+});
+app.use('/api',authRoute)
+
 
 app.get("/", (req, res) => {
   res.send("Welcome to my API!");
