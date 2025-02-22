@@ -4,6 +4,7 @@ import cors from "cors";
 import { createServer } from "http";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 dotenv.config();
 
 import connectToSocket from "./config/socket.js";
@@ -18,6 +19,7 @@ app.use(
     methods: "GET, POST, PUT, DELETE",
   })
 );
+app.use(cookieParser())
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
