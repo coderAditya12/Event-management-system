@@ -32,9 +32,7 @@ const Login = () => {
         formData,
         { withCredentials: true }
       );
-      console.log(response);
       if (response.status === 200) {
-        console.log(response.data);
         setUser(response.data);
         navigate("/dashboard");
       }

@@ -4,17 +4,16 @@ import { Button } from "@/components/ui/button";
 const LandingPage = () => {
   const handleGetStarted = () => {
     // Add registration/get started logic here
-    console.log("Get Started clicked");
   };
 
   const handleViewEvents = () => {
     // Add event listing logic here
-    console.log("View Events clicked");
+
   };
 
   const handleCreateEvent = () => {
     // Add event creation logic here
-    console.log("Create Event clicked");
+
   };
 
   return (
