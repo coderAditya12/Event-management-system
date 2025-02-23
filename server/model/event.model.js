@@ -29,6 +29,22 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    category: {
+      type: String,
+      enum: [
+        "Tech",
+        "Business",
+        "Entertainment",
+        "Education",
+        "Sports",
+        "Health",
+        "Arts",
+        "Social",
+        "Other",
+      ],
+      required: true,
+      default: "Entertainment",
+    },
     date: {
       type: Number,
       required: true,
@@ -46,10 +62,10 @@ const eventSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    location:{
-        type: String,
-        required: true,
-    }
+    location: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );
