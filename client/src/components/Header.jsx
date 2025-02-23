@@ -41,7 +41,9 @@ const Header = () => {
                 <Link to="/login">Login</Link>
               </Button>
             )}
-            <Button>Dashboard</Button>
+            <Button asChild>
+              <Link to="/dashboard">Dashboard</Link>
+            </Button>
           </div>
         </div>
       </nav>

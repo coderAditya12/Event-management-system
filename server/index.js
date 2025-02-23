@@ -4,6 +4,7 @@ import cors from "cors";
 import { createServer } from "http";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import eventRoute from "./routes/event.route.js";
 import cookieParser from "cookie-parser";
 dotenv.config();
 
@@ -19,7 +20,7 @@ app.use(
     methods: "GET, POST, PUT, DELETE",
   })
 );
-app.use(cookieParser())
+app.use(cookieParser());
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
@@ -36,8 +37,8 @@ app.use((err, req, res, next) => {
     message,
   });
 });
-app.use('/api',authRoute)
-
+app.use("/api", authRoute);
+app.use("/api", eventRoute);
 
 app.get("/", (req, res) => {
   res.send("Welcome to my API!");
