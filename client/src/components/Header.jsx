@@ -44,6 +44,9 @@ const Header = () => {
             <Button asChild>
               <Link to="/dashboard">Dashboard</Link>
             </Button>
+            <Button asChild>
+              <Link to="/create">Create Event +</Link>
+            </Button>
           </div>
         </div>
       </nav>
