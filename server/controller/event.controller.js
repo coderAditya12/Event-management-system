@@ -26,3 +26,8 @@ export const getallEvents = async (req, res, next) => {
     next(error);
   }
 };
+export const getEvent = async (req, res, next) => {
+  const eventId = req.params.id;
+  const singleEvent = await Event.findById(eventId);
+  res.status(200).json(singleEvent);
+};
