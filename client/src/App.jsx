@@ -6,6 +6,7 @@ import LandingPage from "./pages/LandingPage";
 import Header from "./components/Header";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import CreateEvent from "./pages/CreateEvent";
+import EventDetails from "./pages/eventDetails";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/register" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/event/:eventId" element={<EventDetails />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/create" element={<CreateEvent />} />
           </Route>

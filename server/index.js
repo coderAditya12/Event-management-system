@@ -6,13 +6,11 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import eventRoute from "./routes/event.route.js";
 import cookieParser from "cookie-parser";
-dotenv.config();
-
 import connectToSocket from "./config/socket.js";
+dotenv.config();
 const app = express();
 const server = createServer(app);
 const io = connectToSocket(server);
-
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -39,7 +37,6 @@ app.use((err, req, res, next) => {
 });
 app.use("/api", authRoute);
 app.use("/api", eventRoute);
-
 app.get("/", (req, res) => {
   res.send("Welcome to my API!");
 });

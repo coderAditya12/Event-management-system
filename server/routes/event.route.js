@@ -9,5 +9,4 @@ const route = express.Router();
 route.post("/create", verifyToken, createEvent);
 route.get("/getallevents", getallEvents);
 route.get("/getevent/:id", getEvent);
-
 export default route;
