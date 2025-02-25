@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, Clock, MapPin, User, Users } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import userStore from "@/store/userStore";
 
 const EventDetailPage = () => {
+  const user = userStore((state) => state.user);
+  const navigate = useNavigate();
   const { eventId } = useParams(); // Make sure this matches your route parameter name
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -33,9 +36,21 @@ const EventDetailPage = () => {
     }
   }, [eventId]); // Add eventId as dependency
 
-  const handleRegister = () => {
-    if (event) {
-      console.log("Registering for event:", event._id);
+  const handleRegister = async () => {
+    if (!user) {
+      navigate("/login");
+    }
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/api/${eventId}/join`,
+        { userId: user._id, fullName: user.fullName },
+        { withCredentials: true }
+      );
+      if(response.status===200){
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 

@@ -43,8 +43,7 @@ export const joinEvent = async (req, res, next) => {
 
     // Check if event exists
     if (!existingEvent) {
-      return errorHandler(res,404,"Event not found")
-      
+      return errorHandler(res, 404, "Event not found");
     }
 
     // Check if user is already registered
@@ -53,13 +52,11 @@ export const joinEvent = async (req, res, next) => {
     );
 
     if (userAlreadyRegistered) {
-      return errorHandler(res,400,"User already registered")
+      return errorHandler(res, 400, "User already registered");
     }
-
     // Add user to the event
     existingEvent.attendances.push({ id: userId, fullName });
     await existingEvent.save();
-
     // Emit socket event
     io.to(eventId).emit("attendanceUpdated", existingEvent.attendances);
 
