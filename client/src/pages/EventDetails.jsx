@@ -5,13 +5,15 @@ import { Calendar, Clock, MapPin, User, Users } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import userStore from "@/store/userStore";
+import { io } from "socket.io-client";
 
 const EventDetailPage = () => {
   const user = userStore((state) => state.user);
   const navigate = useNavigate();
-  const { eventId } = useParams(); // Make sure this matches your route parameter name
+  const { eventId } = useParams();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [socket, setSocket] = useState(null);
   const [error, setError] = useState(null);
 
   const getEvent = async () => {
@@ -29,6 +31,27 @@ const EventDetailPage = () => {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    const newSocket = io("http://localhost:3000");
+    setSocket(newSocket);
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
+  //join event room when socket is ready
+  useEffect(() => {
+    if (socket && eventId) {
+      socket.emit("joinEventRoom", eventId);
+    }
+  }, [socket, eventId]);
+  //listen for attendance updates from the server
+  useEffect(() => {
+    if (socket) {
+      socket.on("attendanceUpdated", (updatedAttendances) => {
+        setEvent((prev) => ({ ...prev, attendances: updatedAttendances }));
+      });
+    }
+  }, [socket]);
 
   useEffect(() => {
     if (eventId) {
@@ -46,8 +69,8 @@ const EventDetailPage = () => {
         { userId: user._id, fullName: user.fullName },
         { withCredentials: true }
       );
-      if(response.status===200){
-        window.location.reload();
+      if (response.status === 200) {
+        // window.location.reload();
       }
     } catch (error) {
       console.log(error);
