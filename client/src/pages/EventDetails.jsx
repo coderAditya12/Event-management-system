@@ -15,6 +15,7 @@ const EventDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [socket, setSocket] = useState(null);
   const [error, setError] = useState(null);
+  const [isAttending, setIsAttending] = useState(false);
 
   const getEvent = async () => {
     try {
@@ -23,6 +24,15 @@ const EventDetailPage = () => {
         `http://localhost:3000/api/getEvent/${eventId}`
       );
       setEvent(response.data);
+
+      // Check if current user is in attendances list
+      if (user && response.data.attendances) {
+        const userAttending = response.data.attendances.some(
+          (attendee) => attendee.id === user._id
+        );
+        setIsAttending(userAttending);
+      }
+
       setError(null);
     } catch (error) {
       console.error("Error fetching event:", error);
@@ -31,6 +41,7 @@ const EventDetailPage = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     const newSocket = io("http://localhost:3000");
     setSocket(newSocket);
@@ -38,30 +49,39 @@ const EventDetailPage = () => {
       newSocket.disconnect();
     };
   }, []);
+
   //join event room when socket is ready
   useEffect(() => {
     if (socket && eventId) {
       socket.emit("joinEventRoom", eventId);
     }
   }, [socket, eventId]);
+
   //listen for attendance updates from the server
   useEffect(() => {
     if (socket) {
       socket.on("attendanceUpdated", (updatedAttendances) => {
         setEvent((prev) => ({ ...prev, attendances: updatedAttendances }));
+        if (user) {
+          const userAttending = updatedAttendances.some(
+            (attendee) => attendee.id === user._id
+          );
+          setIsAttending(userAttending);
+        }
       });
     }
-  }, [socket]);
+  }, [socket, user]);
 
   useEffect(() => {
     if (eventId) {
       getEvent();
     }
-  }, [eventId]); // Add eventId as dependency
+  }, [eventId, user]); // Add user as dependency to re-check attendance status if user changes
 
   const handleRegister = async () => {
     if (!user) {
       navigate("/login");
+      return;
     }
     try {
       const response = await axios.post(
@@ -70,7 +90,28 @@ const EventDetailPage = () => {
         { withCredentials: true }
       );
       if (response.status === 200) {
-        // window.location.reload();
+        setIsAttending(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleLeave = async () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    try {
+      const response = await axios.delete(
+        `http://localhost:3000/api/${eventId}/leave`,
+        {
+          data: { userId: user._id },
+          withCredentials: true,
+        }
+      );
+      if (response.status === 200) {
+        setIsAttending(false);
       }
     } catch (error) {
       console.log(error);
@@ -182,9 +223,18 @@ const EventDetailPage = () => {
                 </span>
               </div>
 
-              <Button onClick={handleRegister} className="w-full mt-4">
-                Register for Event
-              </Button>
+              {isAttending ? (
+                <Button
+                  onClick={handleLeave}
+                  className="w-full mt-4 bg-red-600 hover:bg-red-700"
+                >
+                  Leave Event
+                </Button>
+              ) : (
+                <Button onClick={handleRegister} className="w-full mt-4">
+                  Register for Event
+                </Button>
+              )}
             </div>
           </div>
 
