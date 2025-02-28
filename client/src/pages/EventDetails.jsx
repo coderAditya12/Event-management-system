@@ -16,6 +16,7 @@ const EventDetailPage = () => {
   const [socket, setSocket] = useState(null);
   const [error, setError] = useState(null);
   const [isAttending, setIsAttending] = useState(false);
+  const [isHost, setIsHost] = useState(false);
 
   const getEvent = async () => {
     try {
@@ -24,9 +25,8 @@ const EventDetailPage = () => {
         `http://localhost:3000/api/getEvent/${eventId}`
       );
       setEvent(response.data);
-
-      // Check if current user is in attendances list
-      if (user && response.data.attendances) {
+      if (user) {
+        setIsHost(user._id === response.data.hostedBy);
         const userAttending = response.data.attendances.some(
           (attendee) => attendee.id === user._id
         );
@@ -222,19 +222,31 @@ const EventDetailPage = () => {
                   {event.attendances ? event.attendances.length : 0} attending
                 </span>
               </div>
-
-              {isAttending ? (
-                <Button
-                  onClick={handleLeave}
-                  className="w-full mt-4 bg-red-600 hover:bg-red-700"
-                >
-                  Leave Event
-                </Button>
-              ) : (
-                <Button onClick={handleRegister} className="w-full mt-4">
-                  Register for Event
-                </Button>
+              {isHost && (
+                <div className="space-y-2">
+                  <h4 className="font-medium">Participants:</h4>
+                  {event.attendances?.map((attendee) => (
+                    <div key={attendee.id} className="flex items-center gap-2">
+                      <User className="w-5 h-5 text-gray-500" />
+                      <span>{attendee.fullName}</span>
+                    </div>
+                  ))}
+                </div>
               )}
+
+              {!isHost &&
+                (isAttending ? (
+                  <Button
+                    onClick={handleLeave}
+                    className="w-full mt-4 bg-red-600 hover:bg-red-700"
+                  >
+                    Leave Event
+                  </Button>
+                ) : (
+                  <Button onClick={handleRegister} className="w-full mt-4">
+                    Register for Event
+                  </Button>
+                ))}
             </div>
           </div>
 
