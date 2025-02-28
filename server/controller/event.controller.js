@@ -91,7 +91,6 @@ export const leaveEvent = async (req, res, next) => {
       return errorHandler(res, 400, "User not registered");
     }
 
-    // 4. Remove User
     existingEvent.attendances.splice(userIndex, 1);
     await existingEvent.save();
     io.to(eventId).emit("attendanceUpdated", existingEvent.attendances);
@@ -103,27 +102,37 @@ export const leaveEvent = async (req, res, next) => {
 
 export const updateEvent = async (req, res, next) => {
   const { eventId } = req.params;
-  const existingEvent = await Event.findById(eventId);
-  if (!existingEvent) {
-    return errorHandler(res, 404, "Event not found");
-  }
+  const { title, description, month, time, date, category, location, status } =
+    req.body;
+  console.log("req.user", req.user);
+  const userId = req.user.id;
+
   try {
-    const { title, description, month, time, date, category, location,status } =
-      req.body;
-    const newEvent = await Event.findByIdAndUpdate(
-      eventId,
-      {
-        title,
-        description,
-        date,
-        time,
-        location,
-        month,
-        category,
-        status,      },
-      { new: true }
-    );
-    res.status(201).json(newEvent);
+    const existingEvent = await Event.findById(eventId);
+    if (!existingEvent) {
+      return errorHandler(res, 404, "Event not found");
+    }
+    if (existingEvent.hostedBy !== userId) {
+      return errorHandler(res, 403, "Not authorized to update this event");
+    }
+    const updates = {};
+    if (title) updates.title = title;
+    if (description) updates.description = description;
+    if (month) updates.month = month;
+    if (time) updates.time = time;
+    if (date) updates.date = date;
+    if (category) updates.category = category;
+    if (location) updates.location = location;
+    if (status) updates.status = status;
+    const updatedEvent = await Event.findByIdAndUpdate(eventId, updates, {
+      new: true,
+    });
+
+    io.to(eventId).emit("eventUpdated", updatedEvent);
+
+    res
+      .status(200)
+      .json({ message: "Event updated successfully", event: updatedEvent });
   } catch (error) {
     next(error);
   }
