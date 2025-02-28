@@ -5,6 +5,7 @@ import {
   getEvent,
   joinEvent,
   leaveEvent,
+  updateEvent,
 } from "../controller/event.controller.js";
 import verifyToken from "../middleware/verify.js";
 const route = express.Router();
@@ -13,4 +14,5 @@ route.get("/getallevents", getallEvents);
 route.get("/getevent/:id", getEvent);
 route.post("/:eventId/join", joinEvent);
 route.delete("/:eventId/leave", leaveEvent);
+route.post("/:eventId/update", updateEvent);
 export default route;

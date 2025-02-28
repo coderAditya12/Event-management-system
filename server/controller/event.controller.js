@@ -92,10 +92,38 @@ export const leaveEvent = async (req, res, next) => {
     }
 
     // 4. Remove User
-    existingEvent.attendances.splice(userIndex, 1); 
+    existingEvent.attendances.splice(userIndex, 1);
     await existingEvent.save();
     io.to(eventId).emit("attendanceUpdated", existingEvent.attendances);
     res.status(200).json({ message: "Unregistered successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateEvent = async (req, res, next) => {
+  const { eventId } = req.params;
+  const existingEvent = await Event.findById(eventId);
+  if (!existingEvent) {
+    return errorHandler(res, 404, "Event not found");
+  }
+  try {
+    const { title, description, month, time, date, category, location,status } =
+      req.body;
+    const newEvent = await Event.findByIdAndUpdate(
+      eventId,
+      {
+        title,
+        description,
+        date,
+        time,
+        location,
+        month,
+        category,
+        status,      },
+      { new: true }
+    );
+    res.status(201).json(newEvent);
   } catch (error) {
     next(error);
   }
