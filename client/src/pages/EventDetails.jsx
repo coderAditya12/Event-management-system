@@ -60,6 +60,9 @@ const EventDetailPage = () => {
   //listen for attendance updates from the server
   useEffect(() => {
     if (socket) {
+      socket.on("eventUpdated",(updateEvent)=>{
+        setEvent(updateEvent);
+      })
       socket.on("attendanceUpdated", (updatedAttendances) => {
         setEvent((prev) => ({ ...prev, attendances: updatedAttendances }));
         if (user) {

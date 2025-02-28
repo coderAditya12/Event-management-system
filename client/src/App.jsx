@@ -7,6 +7,7 @@ import Header from "./components/Header";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import CreateEvent from "./pages/CreateEvent";
 import EventDetails from "./pages/eventDetails";
+import UpdateEvent from "./pages/UpdateEvent";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/event/:eventId" element={<EventDetails />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/create" element={<CreateEvent />} />
+            <Route path="/:eventId/update" element={<UpdateEvent />} />
           </Route>
         </Routes>
       </BrowserRouter>

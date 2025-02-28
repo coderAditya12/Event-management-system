@@ -14,5 +14,5 @@ route.get("/getallevents", getallEvents);
 route.get("/getevent/:id", getEvent);
 route.post("/:eventId/join", joinEvent);
 route.delete("/:eventId/leave", leaveEvent);
-route.post("/:eventId/update",verifyToken, updateEvent);
+route.put("/:eventId/update",verifyToken, updateEvent);
 export default route;
