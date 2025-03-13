@@ -23,6 +23,9 @@ const eventSchema = new mongoose.Schema(
         fullName: {
           type: String,
         },
+        FCM:{
+          type:String
+        }
       },
     ],
     month: {

@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, Clock, MapPin, User, Users } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import userStore from "@/store/userStore";
 import { io } from "socket.io-client";
+import { getToken, messaging } from "@/firebase";
 
 const EventDetailPage = () => {
   const user = userStore((state) => state.user);
@@ -60,9 +61,9 @@ const EventDetailPage = () => {
   //listen for attendance updates from the server
   useEffect(() => {
     if (socket) {
-      socket.on("eventUpdated",(updateEvent)=>{
+      socket.on("eventUpdated", (updateEvent) => {
         setEvent(updateEvent);
-      })
+      });
       socket.on("attendanceUpdated", (updatedAttendances) => {
         setEvent((prev) => ({ ...prev, attendances: updatedAttendances }));
         if (user) {
@@ -74,6 +75,31 @@ const EventDetailPage = () => {
       });
     }
   }, [socket, user]);
+  const requestNotificationPermission = async (eventId) => {
+    try {
+      const permission = await Notification.requestPermission();
+      const registration = await navigator.serviceWorker.register(
+        "/firebase-messaging-sw.js"
+      );
+      if (permission === "granted") {
+        const token = await getToken(messaging, {
+          vapidKey:
+            "BGZ82SLKBqhgaUDPj0-y_D1gWRSu34Lz_bpfWEd3Xj-8-s0_WTeho3nQvt8h2Od4Qb9t33Eert5vaMWkMkM7o2M",
+          registration,
+        });
+        console.log(token);
+        //api call
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // useEffect(() => {
+  //   if (user && event) {
+  //     requestNotificationPermission(eventId);
+  //   }
+  // }, [user, event]);
 
   useEffect(() => {
     if (eventId) {
@@ -89,11 +115,12 @@ const EventDetailPage = () => {
     try {
       const response = await axios.post(
         `http://localhost:3000/api/${eventId}/join`,
-        { userId: user._id, fullName: user.fullName },
+        { userId: user._id, fullName: user.fullName},
         { withCredentials: true }
       );
       if (response.status === 200) {
         setIsAttending(true);
+        requestNotificationPermission(eventId);
       }
     } catch (error) {
       console.log(error);
@@ -234,6 +261,9 @@ const EventDetailPage = () => {
                       <span>{attendee.fullName}</span>
                     </div>
                   ))}
+                  <Button asChild>
+                    <Link to={`/${eventId}/update`}>Update event</Link>
+                  </Button>
                 </div>
               )}
 
