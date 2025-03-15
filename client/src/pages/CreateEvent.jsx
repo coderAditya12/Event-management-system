@@ -1,7 +1,9 @@
+import userStore from "@/store/userStore";
 import axios from "axios";
 import React, { useState } from "react";
 
 const CreateEvent = () => {
+  const user =  userStore(state=>state.user);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -42,7 +44,7 @@ const CreateEvent = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [name]: value,hostedBy:user?user.email:formData.hostedBy });
   };
 
   const handleSubmit = async (e) => {
@@ -161,7 +163,7 @@ const CreateEvent = () => {
           <input
             type="text"
             name="hostedBy"
-            value={formData.hostedBy}
+            value={user ? user.email : formData.hostedBy}
             onChange={handleChange}
             className="w-full p-2 border rounded"
           />

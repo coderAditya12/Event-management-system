@@ -1,3 +1,4 @@
+import userStore from "@/store/userStore";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -5,6 +6,7 @@ import { io } from "socket.io-client";
 
 const UpdateEvent = () => {
   const { eventId } = useParams();
+  const user = userStore((state) => state.user);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -17,6 +19,7 @@ const UpdateEvent = () => {
     category: "",
     hostedBy: "",
     location: "",
+    updateMessage: "", // Added update message field
   });
   const [socket, setSocket] = useState(null);
 
@@ -68,7 +71,10 @@ const UpdateEvent = () => {
           { withCredentials: true }
         );
         if (response.status === 200) {
-          setFormData(response.data);
+          setFormData({
+            ...response.data,
+            updateMessage: "", // Initialize update message as empty
+          });
         }
       } catch (error) {
         console.error("Error fetching event:", error);
@@ -98,6 +104,16 @@ const UpdateEvent = () => {
       );
       if (response.status === 200) {
         console.log("Event updated successfully:", response.data);
+
+        // Emit update notification through socket if there's an update message
+        if (socket && formData.updateMessage.trim()) {
+          socket.emit("eventUpdated", {
+            eventId,
+            message: formData.updateMessage,
+            updatedBy: user ? user.email : formData.hostedBy,
+          });
+        }
+
         navigate(`/event/${eventId}`);
       }
     } catch (error) {
@@ -215,8 +231,8 @@ const UpdateEvent = () => {
           <input
             type="text"
             name="hostedBy"
-            value={formData.hostedBy}
-            readOnly
+            value={user ? user.email : formData.hostedBy}
+            onChange={handleChange}
             className="w-full p-2 border rounded bg-gray-100"
           />
         </div>
@@ -231,6 +247,24 @@ const UpdateEvent = () => {
             onChange={handleChange}
             className="w-full p-2 border rounded"
             required
+          />
+        </div>
+
+        {/* Update Message - New Field */}
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Update Message{" "}
+            <span className="text-gray-500 text-xs">
+              (Optional - Notify attendees about this update)
+            </span>
+          </label>
+          <textarea
+            name="updateMessage"
+            value={formData.updateMessage}
+            onChange={handleChange}
+            className="w-full p-2 border rounded"
+            rows="2"
+            placeholder="Describe what's changing in this update..."
           />
         </div>
 

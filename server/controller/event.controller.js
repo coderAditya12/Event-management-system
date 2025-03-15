@@ -2,10 +2,19 @@ import errorHandler from "../middleware/error.js";
 import { io } from "../config/socket.js";
 import Event from "../model/event.model.js";
 import mongoose from "mongoose";
+import admin from "../firebase-admin.js";
 export const createEvent = async (req, res, next) => {
   try {
-    const { title, description, month, time, date, category, location } =
-      req.body;
+    const {
+      title,
+      description,
+      month,
+      time,
+      date,
+      category,
+      location,
+      hostedBy,
+    } = req.body;
     const newEvent = await Event.create({
       title,
       description,
@@ -14,7 +23,7 @@ export const createEvent = async (req, res, next) => {
       location,
       month,
       category,
-      hostedBy: req.user.id,
+      hostedBy,
     });
     res.status(201).json(newEvent);
   } catch (error) {
@@ -102,17 +111,25 @@ export const leaveEvent = async (req, res, next) => {
 
 export const updateEvent = async (req, res, next) => {
   const { eventId } = req.params;
-  const { title, description, month, time, date, category, location, status } =
-    req.body;
-  console.log("req.user", req.user);
-  const userId = req.user.id;
-
+  const {
+    title,
+    description,
+    month,
+    time,
+    date,
+    category,
+    location,
+    status,
+    hostedBy,
+    updateMessage,
+  } = req.body;
+  const userEmail = req.user.email;
   try {
     const existingEvent = await Event.findById(eventId);
     if (!existingEvent) {
       return errorHandler(res, 404, "Event not found");
     }
-    if (existingEvent.hostedBy !== userId) {
+    if (existingEvent.hostedBy !== userEmail) {
       return errorHandler(res, 403, "Not authorized to update this event");
     }
     const updates = {};
@@ -124,9 +141,33 @@ export const updateEvent = async (req, res, next) => {
     if (category) updates.category = category;
     if (location) updates.location = location;
     if (status) updates.status = status;
+    if (hostedBy) updates.hostedBy = hostedBy;
     const updatedEvent = await Event.findByIdAndUpdate(eventId, updates, {
       new: true,
     });
+    if (updateMessage) {
+      const tokens = updatedEvent.attendances
+        .map((sub) => sub.FCM)
+        .filter((token) => !!token);
+
+      if (tokens.length > 0) {
+        const message = {
+          tokens,
+          notification: {
+            title: "Event Updated!",
+            body: updateMessage,
+          },
+          webpush: {
+            fcmOptions: {
+              link: `http://localhost:5173/event/${eventId}`,
+            },
+          },
+        };
+        const response = await admin.messaging().sendEachForMulticast(message);
+        console.log("notification response is", response)
+        console.log(`${response.successCount} notification send successfully`);
+      }
+    }
 
     io.to(eventId).emit("eventUpdated", updatedEvent);
 

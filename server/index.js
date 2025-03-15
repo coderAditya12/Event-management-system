@@ -5,6 +5,7 @@ import { createServer } from "http";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import eventRoute from "./routes/event.route.js";
+import notificationRoute from "./routes/notification.route.js"
 import cookieParser from "cookie-parser";
 import connectToSocket from "./config/socket.js";
 dotenv.config();
@@ -37,6 +38,7 @@ app.use((err, req, res, next) => {
 });
 app.use("/api", authRoute);
 app.use("/api", eventRoute);
+app.use("/api",notificationRoute);
 app.get("/", (req, res) => {
   res.send("Welcome to my API!");
 });
