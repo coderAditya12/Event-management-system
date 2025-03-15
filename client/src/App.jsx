@@ -8,6 +8,8 @@ import ProtectedRoute from "./pages/ProtectedRoute";
 import CreateEvent from "./pages/CreateEvent";
 import EventDetails from "./pages/eventDetails";
 import UpdateEvent from "./pages/UpdateEvent";
+import Profile from "./pages/Profile";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -18,13 +20,16 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/register" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/events" element={<Dashboard />} />
           <Route path="/event/:eventId" element={<EventDetails />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/create" element={<CreateEvent />} />
             <Route path="/:eventId/update" element={<UpdateEvent />} />
+            <Route path="/profile" element={<Profile />} />
+            
           </Route>
         </Routes>
+        <Footer/>
       </BrowserRouter>
     </>
   );

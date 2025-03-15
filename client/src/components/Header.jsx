@@ -1,12 +1,37 @@
-
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import userStore from "@/store/userStore";
+import axios from "axios";
 
 const Navbar = () => {
+  const user = userStore((state) => state.user);
+  const setUser = userStore((state) => state.setUser);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    
+    try {
+      const response = await axios.get("http://localhost:3000/api/signout", {
+        withCredentials: true,
+      });
+
+      if (response.status === 200) {
+        // Clear user from store
+        setUser(null);
+        // Close the mobile menu if it's open
+        setIsMenuOpen(false);
+        // Redirect to home page
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Sign out failed:", error);
+      // You might want to add error handling UI here
+    }
+  };
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -37,21 +62,35 @@ const Navbar = () => {
               className="bg-transparent border-purple-300 text-white hover:bg-purple-600"
               asChild
             >
-              <Link to="/create-event">Create Event</Link>
+              <Link to="/create">Create Event</Link>
             </Button>
-            <Button
-              variant="secondary"
-              className="bg-white text-purple-700 hover:bg-purple-100"
-              asChild
-            >
-              <Link to="/login">Login</Link>
-            </Button>
-            <Button
-              className="bg-purple-500 hover:bg-purple-600 text-white"
-              asChild
-            >
-              <Link to="/signup">Signup</Link>
-            </Button>
+
+            {!user ? (
+              <div className="items-center space-x-4">
+                <Button
+                  variant="secondary"
+                  className="bg-white text-purple-700 hover:bg-purple-100"
+                  asChild
+                >
+                  <Link to="/login">Login</Link>
+                </Button>
+                <Button
+                  className="bg-purple-500 hover:bg-purple-600 text-white"
+                  asChild
+                >
+                  <Link to="/register">Signup</Link>
+                </Button>
+              </div>
+            ) : (
+              <Button
+                className="bg-purple-500 hover:bg-purple-600 text-white"
+                asChild
+                onClick={handleSignOut}
+              >
+                <Link to="/register">SignOut</Link>
+              </Button>
+            )}
+
             <Button
               variant="ghost"
               className="text-white hover:bg-purple-600"
@@ -95,20 +134,34 @@ const Navbar = () => {
             >
               Create Event
             </Link>
-            <Link
-              to="/login"
-              className="text-white hover:text-purple-200 font-medium transition-colors py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Login
-            </Link>
-            <Link
-              to="/signup"
-              className="text-white hover:text-purple-200 font-medium transition-colors py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Signup
-            </Link>
+            {!user ? (
+              // Show login and signup when user is not logged in
+              <>
+                <Link
+                  to="/login"
+                  className="text-white hover:text-purple-200 font-medium transition-colors py-2"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="text-white hover:text-purple-200 font-medium transition-colors py-2"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Signup
+                </Link>
+              </>
+            ) : (
+              // Show signout when user is logged in
+              <Link
+                to="/signout"
+                className="text-white hover:text-purple-200 font-medium transition-colors py-2"
+                onClick={handleSignOut}
+              >
+                Sign Out
+              </Link>
+            )}
             <Link
               to="/profile"
               className="text-white hover:text-purple-200 font-medium transition-colors py-2"

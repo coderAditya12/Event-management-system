@@ -34,7 +34,7 @@ const Login = () => {
       );
       if (response.status === 200) {
         setUser(response.data);
-        navigate("/dashboard");
+        navigate("/events");
       }
       setLoading(false);
     } catch (error) {
