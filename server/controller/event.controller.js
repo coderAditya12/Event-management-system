@@ -27,8 +27,9 @@ export const createEvent = async (req, res, next) => {
       hostedBy,
       image:imageUrl
     });
-    res.status(201).json(newEvent);
+    return res.status(201).json(newEvent);
   } catch (error) {
+    console.log("error",error);
     next(error);
   }
 };

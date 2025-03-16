@@ -82,7 +82,7 @@ const Dashboard = () => {
                   {/* Image Section */}
                   <div className="w-full h-48 overflow-hidden">
                     {event.image && event.image.trim() !== "" ? (
-                      <img
+                      <img 
                         src={event.image}
                         alt={event.title}
                         className="w-full h-full object-cover"
