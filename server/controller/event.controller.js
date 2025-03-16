@@ -14,6 +14,7 @@ export const createEvent = async (req, res, next) => {
       category,
       location,
       hostedBy,
+      imageUrl
     } = req.body;
     const newEvent = await Event.create({
       title,
@@ -24,6 +25,7 @@ export const createEvent = async (req, res, next) => {
       month,
       category,
       hostedBy,
+      image:imageUrl
     });
     res.status(201).json(newEvent);
   } catch (error) {
