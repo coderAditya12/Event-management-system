@@ -4,9 +4,8 @@
   "main": "./server/index.js",
   "scripts": {
     "start": "node server/indx.js",
-    "build":"yarn install && cd client && yarn install && yarn build",
-    "dev":"nodemon server/index.js"
-
+    "build": "yarn install && cd client && yarn install && yarn build",
+    "dev": "nodemon server/index.js"
   },
   "type": "module",
   "license": "MIT",
@@ -16,6 +15,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "firebase-admin": "^13.2.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.13.1",
     "mongoose": "^8.10.1",
