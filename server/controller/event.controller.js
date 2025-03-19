@@ -14,7 +14,7 @@ export const createEvent = async (req, res, next) => {
       category,
       location,
       hostedBy,
-      imageUrl
+      imageUrl,
     } = req.body;
     const newEvent = await Event.create({
       title,
@@ -25,11 +25,11 @@ export const createEvent = async (req, res, next) => {
       month,
       category,
       hostedBy,
-      image:imageUrl
+      image: imageUrl,
     });
     return res.status(201).json(newEvent);
   } catch (error) {
-    console.log("error",error);
+    console.log("error", error);
     next(error);
   }
 };
@@ -125,7 +125,9 @@ export const updateEvent = async (req, res, next) => {
     status,
     hostedBy,
     updateMessage,
+    image,
   } = req.body;
+  console.log("image", updateMessage);
   const userEmail = req.user.email;
   try {
     const existingEvent = await Event.findById(eventId);
@@ -145,33 +147,13 @@ export const updateEvent = async (req, res, next) => {
     if (location) updates.location = location;
     if (status) updates.status = status;
     if (hostedBy) updates.hostedBy = hostedBy;
+    if (image) {
+      console.log("image", image);
+      updates.image = image;
+    }
     const updatedEvent = await Event.findByIdAndUpdate(eventId, updates, {
       new: true,
     });
-    if (updateMessage) {
-      const tokens = updatedEvent.attendances
-        .map((sub) => sub.FCM)
-        .filter((token) => !!token);
-
-      if (tokens.length > 0) {
-        const message = {
-          tokens,
-          notification: {
-            title: "Event Updated!",
-            body: updateMessage,
-          },
-          webpush: {
-            fcmOptions: {
-              link: `http://localhost:5173/event/${eventId}`,
-            },
-          },
-        };
-        const response = await admin.messaging().sendEachForMulticast(message);
-        console.log("notification response is", response)
-        console.log(`${response.successCount} notification send successfully`);
-      }
-    }
-
     io.to(eventId).emit("eventUpdated", updatedEvent);
 
     res
@@ -181,3 +163,26 @@ export const updateEvent = async (req, res, next) => {
     next(error);
   }
 };
+
+// if (updateMessage) {
+//   const tokens = updatedEvent.attendances
+//     .map((sub) => sub.FCM)
+//     .filter((token) => !!token);
+
+//   if (tokens.length > 0) {
+//     const message = {
+//       tokens,
+//       notification: {
+//         title: "Event Updated!",
+//         body: updateMessage,
+//       },
+//       webpush: {
+//         fcmOptions: {
+//           link: `http://localhost:5173/event/${eventId}`,
+//         },
+//       },
+//     };
+//     const response = await admin.messaging().sendEachForMulticast(message);
+//     console.log("notification response is", response)
+//     console.log(`${response.successCount} notification send successfully`);
+//   }

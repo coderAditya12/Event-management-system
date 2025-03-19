@@ -341,9 +341,7 @@ const EventDetailPage = () => {
 
                 <div className="flex items-center text-gray-600 mb-3">
                   <Clock className="h-5 w-5 mr-2 flex-shrink-0 text-gray-500" />
-                  <span>
-                    {event.time}
-                  </span>
+                  <span>{event.time}</span>
                 </div>
 
                 {/* Location */}

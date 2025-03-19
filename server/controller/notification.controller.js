@@ -1,3 +1,4 @@
+
 import Event from "../model/event.model.js";
 import errorHandler from "../middleware/error.js";
 import admin from "../firebase-admin.js";
@@ -28,8 +29,8 @@ export const subscribe = async (req, res, next) => {
 export const notify = async (req, res) => {
   try {
     const { eventId } = req.params;
-    const { title, body } = req.body;
-    const userId = req.user.id; // Authenticated user ID
+    const { title,body } = req.body;
+    const userId = req.user.email; // Authenticated user ID
 
     const event = await Event.findById(eventId);
     if (!event) return res.status(404).json({ error: "Event not found" });
@@ -62,6 +63,7 @@ export const notify = async (req, res) => {
     // Send notifications
     const response = await admin.messaging().sendEachForMulticast(message);
 
+
     // Log failures
     response.responses.forEach((resp, index) => {
       if (!resp.success) {
@@ -71,6 +73,8 @@ export const notify = async (req, res) => {
         );
       }
     });
+    console.log("notification response is", response);
+    console.log(`${response.successCount} notification send successfully`);
 
     res.status(200).json({
       successCount: response.successCount,
