@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Loader2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import userStore from "@/store/userStore";
+import userStore from "@/store/userStore.js";
 import axios from "axios";
 import { io } from "socket.io-client";
 import { toast } from "sonner";
@@ -72,10 +72,9 @@ const UpdateEvent = () => {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const response = await axios.get(
-          `/api/getevent/${eventId}`,
-          { withCredentials: true }
-        );
+        const response = await axios.get(`/api/getevent/${eventId}`, {
+          withCredentials: true,
+        });
         if (response.status === 200) {
           setFormData({
             ...response.data,
@@ -109,12 +108,16 @@ const UpdateEvent = () => {
         throw new Error("Message too long (max 500 characters)");
       }
 
-      await axios.post(`/api/${eventId}/notify`, {
-        title: "Event Update!",
-        body: message,
-      },{
-        withCredentials:true
-      });
+      await axios.post(
+        `/api/${eventId}/notify`,
+        {
+          title: "Event Update!",
+          body: message,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
       toast.success("Notified attendees!");
       setFormData((prev) => ({ ...prev, updateMessage: "" })); // Clear message after sending
@@ -204,14 +207,10 @@ const UpdateEvent = () => {
       };
 
       // Update event first
-      const response = await axios.put(
-        `/api/${eventId}/update`,
-        updatedData,
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const response = await axios.put(`/api/${eventId}/update`, updatedData, {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      });
 
       if (response.status === 200) {
         console.log("Event updated successfully:", response.data);

@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import userStore from "@/store/userStore";
+import userStore from "@/store/userStore.js";
 import axios from "axios";
 
 const CreateEvent = () => {

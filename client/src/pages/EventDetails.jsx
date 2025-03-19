@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import userStore from "@/store/userStore";
+
 import { io } from "socket.io-client";
 import { getToken, messaging, onMessage } from "@/firebase";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +22,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import userStore from "@/store/userStore.js";
 
 const EventDetailPage = () => {
   const user = userStore((state) => state.user);
@@ -57,9 +58,7 @@ const EventDetailPage = () => {
   const getEvent = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `/api/getEvent/${eventId}`
-      );
+      const response = await axios.get(`/api/getEvent/${eventId}`);
       setEvent(response.data);
       if (user) {
         setIsHost(user.email === response.data.hostedBy);
@@ -85,9 +84,9 @@ const EventDetailPage = () => {
       withCredentials: true,
     });
     // const newSocket = io("/socket.io");
-    
+
     setSocket(newSocket);
-    if(socket){
+    if (socket) {
       console.log("connected");
     }
     return () => {
@@ -216,13 +215,10 @@ const EventDetailPage = () => {
       return;
     }
     try {
-      const response = await axios.delete(
-        `/api/${eventId}/leave`,
-        {
-          data: { userId: user._id },
-          withCredentials: true,
-        }
-      );
+      const response = await axios.delete(`/api/${eventId}/leave`, {
+        data: { userId: user._id },
+        withCredentials: true,
+      });
       if (response.status === 200) {
         setIsAttending(false);
         setNotificationSubscribed(false); // Reset notification subscription state
