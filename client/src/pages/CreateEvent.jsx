@@ -129,6 +129,10 @@ const CreateEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(!user){
+      navigate('/login');
+      return;
+    }
     setIsSubmitting(true);
 
     try {

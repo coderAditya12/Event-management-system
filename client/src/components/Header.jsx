@@ -127,7 +127,7 @@ const Navbar = () => {
               Events
             </Link>
             <Link
-              to="/create-event"
+              to="/create"
               className="text-white hover:text-purple-200 font-medium transition-colors py-2"
               onClick={() => setIsMenuOpen(false)}
             >

@@ -22,8 +22,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/events" element={<Dashboard />} />
           <Route path="/event/:eventId" element={<EventDetailPage />} />
-          <Route element={<ProtectedRoute />}>
             <Route path="/create" element={<CreateEvent />} />
+          <Route element={<ProtectedRoute />}>
             <Route path="/:eventId/update" element={<UpdateEvent />} />
             <Route path="/profile" element={<Profile />} />
             
