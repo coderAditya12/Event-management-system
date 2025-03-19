@@ -2,6 +2,12 @@
   "name": "server",
   "version": "1.0.0",
   "main": "./server/index.js",
+  "scripts": {
+    "start": "node server/indx.js",
+    "build":"yarn install && cd client && yarn install && yarn build",
+    "dev":"nodemon server/index.js"
+
+  },
   "type": "module",
   "license": "MIT",
   "dependencies": {

@@ -20,7 +20,7 @@ const Dashboard = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/getallevents"
+        "/api/getallevents"
       );
       if (response.status === 200) {
         setEvents(response.data);

@@ -60,7 +60,10 @@ const UpdateEvent = () => {
 
   // Initialize socket connection
   useEffect(() => {
-    const newSocket = io("http://localhost:3000");
+    const newSocket = io("/", {
+      path: "/socket.io",
+      withCredentials: true,
+    });
     setSocket(newSocket);
     return () => newSocket.disconnect();
   }, []);
@@ -70,7 +73,7 @@ const UpdateEvent = () => {
     const fetchEvent = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/getevent/${eventId}`,
+          `/api/getevent/${eventId}`,
           { withCredentials: true }
         );
         if (response.status === 200) {
@@ -106,7 +109,7 @@ const UpdateEvent = () => {
         throw new Error("Message too long (max 500 characters)");
       }
 
-      await axios.post(`http://localhost:3000/api/${eventId}/notify`, {
+      await axios.post(`/api/${eventId}/notify`, {
         title: "Event Update!",
         body: message,
       },{
@@ -202,7 +205,7 @@ const UpdateEvent = () => {
 
       // Update event first
       const response = await axios.put(
-        `http://localhost:3000/api/${eventId}/update`,
+        `/api/${eventId}/update`,
         updatedData,
         {
           withCredentials: true,

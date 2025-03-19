@@ -5,9 +5,10 @@ import { createServer } from "http";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import eventRoute from "./routes/event.route.js";
-import notificationRoute from "./routes/notification.route.js"
+import notificationRoute from "./routes/notification.route.js";
 import cookieParser from "cookie-parser";
 import connectToSocket from "./config/socket.js";
+import path from "path";
 dotenv.config();
 const app = express();
 const server = createServer(app);
@@ -26,6 +27,7 @@ mongoose
     console.log("Connected to MongoDB");
   })
   .catch((error) => console.error(error));
+const __dirname = path.resolve();
 app.use(express.json());
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
@@ -38,7 +40,11 @@ app.use((err, req, res, next) => {
 });
 app.use("/api", authRoute);
 app.use("/api", eventRoute);
-app.use("/api",notificationRoute);
+app.use("/api", notificationRoute);
+app.use(express.static(path.join(__dirname, "/client/dist")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+});
 app.get("/", (req, res) => {
   res.send("Welcome to my API!");
 });

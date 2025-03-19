@@ -133,7 +133,7 @@ const CreateEvent = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/create",
+        "/api/create",
         { ...formData, hostedBy: user?.email || formData.hostedBy },
         { withCredentials: true }
       );

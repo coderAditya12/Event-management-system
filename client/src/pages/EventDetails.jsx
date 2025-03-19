@@ -58,7 +58,7 @@ const EventDetailPage = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://localhost:3000/api/getEvent/${eventId}`
+        `/api/getEvent/${eventId}`
       );
       setEvent(response.data);
       if (user) {
@@ -80,8 +80,16 @@ const EventDetailPage = () => {
 
   // Set up socket connection once
   useEffect(() => {
-    const newSocket = io("http://localhost:3000");
+    const newSocket = io("/", {
+      path: "/socket.io",
+      withCredentials: true,
+    });
+    // const newSocket = io("/socket.io");
+    
     setSocket(newSocket);
+    if(socket){
+      console.log("connected");
+    }
     return () => {
       newSocket.disconnect();
     };
@@ -139,7 +147,7 @@ const EventDetailPage = () => {
         });
         console.log("FCM token:", token);
         const response = await axios.post(
-          `http://localhost:3000/api/${eventId}/subscribe`,
+          `/api/${eventId}/subscribe`,
           {
             userId: user._id,
             token,
@@ -189,7 +197,7 @@ const EventDetailPage = () => {
     }
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/${eventId}/join`,
+        `/api/${eventId}/join`,
         { userId: user._id, fullName: user.fullName },
         { withCredentials: true }
       );
@@ -209,7 +217,7 @@ const EventDetailPage = () => {
     }
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/${eventId}/leave`,
+        `/api/${eventId}/leave`,
         {
           data: { userId: user._id },
           withCredentials: true,

@@ -28,7 +28,7 @@ const Login = () => {
       setLoading(true);
       setErrors(null);
       const response = await axios.post(
-        "http://localhost:3000/api/login",
+        "/api/login",
         formData,
         { withCredentials: true }
       );
