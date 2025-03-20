@@ -55,10 +55,10 @@ export const userUpdate = async (req, res, next) => {
       new: true,
     });
 
-    const mongoObject = updateUser.toObject();
-    delete mongoObject.password;
+    const userObject = updateUser.toObject();
+    delete userObject.password;
 
-    res.status(200).json(mongoObject);
+    res.status(200).json(userObject);
   } catch (error) {
     next(error);
   }
