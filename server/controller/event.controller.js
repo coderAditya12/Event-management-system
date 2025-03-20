@@ -2,7 +2,6 @@ import errorHandler from "../middleware/error.js";
 import { io } from "../config/socket.js";
 import Event from "../model/event.model.js";
 import mongoose from "mongoose";
-import admin from "../firebase-admin.js";
 export const createEvent = async (req, res, next) => {
   try {
     const {
@@ -163,26 +162,16 @@ export const updateEvent = async (req, res, next) => {
     next(error);
   }
 };
-
-// if (updateMessage) {
-//   const tokens = updatedEvent.attendances
-//     .map((sub) => sub.FCM)
-//     .filter((token) => !!token);
-
-//   if (tokens.length > 0) {
-//     const message = {
-//       tokens,
-//       notification: {
-//         title: "Event Updated!",
-//         body: updateMessage,
-//       },
-//       webpush: {
-//         fcmOptions: {
-//           link: `http://localhost:5173/event/${eventId}`,
-//         },
-//       },
-//     };
-//     const response = await admin.messaging().sendEachForMulticast(message);
-//     console.log("notification response is", response)
-//     console.log(`${response.successCount} notification send successfully`);
-//   }
+export const deleteEvent = async (req, res, next) => {
+  if (req.user.id !== req.params.id) {
+    return next(
+      errorHandler(res, 403, "You are not allowed to delete this post.")
+    );
+  }
+  try {
+    await Event.findByIdAndDelete(req.params.eventId);
+    res.status(200).json("Post deleted successfully.");
+  } catch (error) {
+    next(error);
+  }
+};

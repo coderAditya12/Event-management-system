@@ -10,6 +10,7 @@ import UpdateEvent from "./pages/UpdateEvent";
 import Profile from "./pages/Profile";
 import Footer from "./components/Footer";
 import EventDetailPage from "./pages/EventDetails";
+import RedirectIfAuthenticated from "./pages/RedirectIfAuthenticated";
 
 function App() {
   return (
@@ -18,18 +19,19 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/register" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
+          <Route element={<RedirectIfAuthenticated />}>
+            <Route path="/register" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
+          </Route>
           <Route path="/events" element={<Dashboard />} />
           <Route path="/event/:eventId" element={<EventDetailPage />} />
-            <Route path="/create" element={<CreateEvent />} />
+          <Route path="/create" element={<CreateEvent />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/:eventId/update" element={<UpdateEvent />} />
             <Route path="/profile" element={<Profile />} />
-            
           </Route>
         </Routes>
-        <Footer/>
+        <Footer />
       </BrowserRouter>
     </>
   );

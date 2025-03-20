@@ -5,6 +5,7 @@ import { createServer } from "http";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import eventRoute from "./routes/event.route.js";
+import userRoute from "./routes/user.route.js";
 import notificationRoute from "./routes/notification.route.js";
 import cookieParser from "cookie-parser";
 import connectToSocket from "./config/socket.js";
@@ -41,6 +42,7 @@ app.use((err, req, res, next) => {
 app.use("/api", authRoute);
 app.use("/api", eventRoute);
 app.use("/api", notificationRoute);
+app.use("/api",userRoute);
 app.use(express.static(path.join(__dirname, "/client/dist")));
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "client", "dist", "index.html"));

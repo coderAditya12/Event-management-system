@@ -15,6 +15,11 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 8,
   },
+  image: {
+    type: String,
+    default:
+      "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
+  },
 });
 const user = mongoose.model("user", userSchema);
 export default user;
