@@ -64,31 +64,31 @@ export const userUpdate = async (req, res, next) => {
   }
 };
 // Dashboard Controller
-// export const getDashboardData = async (req, res) => {
-//   try {
-//     const userId = req.user.id; // Get the logged-in user's ID from the request
-//     const userName = req.user.email; // Get user's name
+export const getDashboardData = async (req, res) => {
+  try {
+    const userId = req.user.id; // Get the logged-in user's ID from the request
+    const userName = req.user.email; // Get user's name
 
-//     // Fetch events the user has hosted
-//     const hostedEvents = await Event.find({ hostedBy: userName });
+    // Fetch events the user has hosted
+    const hostedEvents = await Event.find({ hostedBy: userName });
 
-//     // Fetch events the user has attended
-//     const attendedEvents = await Event.find({ "attendances.id": userId });
+    // Fetch events the user has attended
+    const attendedEvents = await Event.find({ "attendances.id": userId });
 
-//     // Fetch past events the user attended (history)
-//     const historyEvents = await Event.find({
-//       "attendances.id": userId,
-//       // status: "Completed",
-//     });
+    // Fetch past events the user attended (history)
+    const historyEvents = await Event.find({
+      "attendances.id": userId,
+      // status: "Completed",
+    });
 
-//     res.status(200).json({
-//       success: true,
-//       hostedEvents,
-//       attendedEvents,
-//       historyEvents,
-//     });
-//   } catch (error) {
-//     res.status(500).json({ success: false, message: error.message });
-//   }
-// };
+    res.status(200).json({
+      success: true,
+      hostedEvents,
+      attendedEvents,
+      historyEvents,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
