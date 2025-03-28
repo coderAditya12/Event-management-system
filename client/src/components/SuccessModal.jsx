@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 const SuccessModal = ({ isOpen, onClose, successMessage, eventId }) => {
   const [isCopied, setIsCopied] = useState(false);
-  const shareableLink = `http://localhost:5173/event/${eventId}`;
+  const shareableLink = `https://easy-fest.onrender.com/event/${eventId}`;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(shareableLink);
