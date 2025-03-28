@@ -6,6 +6,7 @@ import userStore from "@/store/userStore.js";
 import axios from "axios";
 import { io } from "socket.io-client";
 import { toast } from "sonner";
+import { categories, months } from "../data/eventsData";
 
 const UpdateEvent = () => {
   const { eventId } = useParams();
@@ -30,33 +31,6 @@ const UpdateEvent = () => {
     image: "",
     updateMessage: "",
   });
-
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
-  const categories = [
-    "Tech",
-    "Business",
-    "Entertainment",
-    "Education",
-    "Sports",
-    "Health",
-    "Arts",
-    "Social",
-    "Other",
-  ];
 
   // Initialize socket connection
   useEffect(() => {

@@ -5,6 +5,7 @@ import { Clock, Upload, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import {categories,months} from "../data/eventsData"
 import {
   Select,
   SelectContent,
@@ -35,32 +36,6 @@ const CreateEvent = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
-  const categories = [
-    "Tech",
-    "Business",
-    "Entertainment",
-    "Education",
-    "Sports",
-    "Health",
-    "Arts",
-    "Social",
-    "Other",
-  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
