@@ -61,7 +61,7 @@ const UserProfilePage = () => {
   const handleDeleteEvent = async (eventId) => {
     try {
       await axios.delete(
-        `http://localhost:3000/api/${eventId}/${user._id}/delete`,
+        `/api/${eventId}/${user._id}/delete`,
         {
           withCredentials: true,
         }
