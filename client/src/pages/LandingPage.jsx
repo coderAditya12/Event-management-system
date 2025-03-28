@@ -4,8 +4,25 @@ import { Card, CardContent } from "@/components/ui/card";
 import { CalendarIcon, MapPinIcon, ArrowRightIcon } from "lucide-react";
 import EventCard from "@/components/EventCard";
 import FeatureStep from "@/components/FeatureStep";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const LandingPage = () => {
+  const [events,setEvents] = useState([]);
+
+  useEffect(()=>{
+    const fetchEvents = async()=>{
+      const res = await axios.get("/api/getallevents");
+
+      if(res.data.length>4){
+        setEvents(res.data.slice(0,4));
+      }
+      else{
+        setEvents(res.data);
+      }
+    }
+    fetchEvents();
+  },[])
   // Sample event data
   const featuredEvents = [
     {
@@ -113,8 +130,8 @@ const LandingPage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredEvents.map((event) => (
-              <EventCard key={event.id} event={event} />
+            {events.map((event) => (
+              <EventCard key={event._id} event={event} />
             ))}
           </div>
 

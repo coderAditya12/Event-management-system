@@ -22,7 +22,7 @@ const EventCard = ({ event }) => {
           <span className="text-sm">{event.location}</span>
         </div>
         <Link
-          to={`/events/${event.id}`}
+          to={`/event/${event._id}`}
           className="text-purple-600 font-medium hover:text-purple-800 inline-block mt-2"
         >
           View details
