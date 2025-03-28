@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { format } from "date-fns";
-import { Clock, Upload, X } from "lucide-react";
+import { Clock, Upload, X, CheckCircle, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {categories,months} from "../data/eventsData"
+import { categories, months } from "../data/eventsData";
 import {
   Select,
   SelectContent,
@@ -13,9 +12,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
 import userStore from "@/store/userStore.js";
 import axios from "axios";
+import SuccessModal from "@/components/SuccessModal";
 
 const CreateEvent = () => {
   const user = userStore((state) => state.user);
@@ -36,6 +35,10 @@ const CreateEvent = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // State for success modal
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [eventId, setEventId] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -69,7 +72,6 @@ const CreateEvent = () => {
 
   const handleImageUpload = async () => {
     if (!selectedFile) return;
-
     setIsUploading(true);
     try {
       const data = new FormData();
@@ -81,7 +83,6 @@ const CreateEvent = () => {
         "https://api.cloudinary.com/v1_1/dpvfwzmid/image/upload",
         data
       );
-      console.log(response.data.secure_url);
       setFormData((prev) => ({
         ...prev,
         imageUrl: response.data.secure_url,
@@ -104,8 +105,8 @@ const CreateEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(!user){
-      navigate('/login');
+    if (!user) {
+      navigate("/login");
       return;
     }
     setIsSubmitting(true);
@@ -118,8 +119,23 @@ const CreateEvent = () => {
       );
       if (response.status === 201) {
         console.log(response.data);
-        // Optionally navigate to events page
-        // navigate("/events");
+        setSuccessMessage(
+          response.data.message || "Event created successfully!"
+        );
+        setEventId(response.data._id); // Make sure your API returns eventId
+        setIsSuccessModalOpen(true);
+        // Reset form if needed
+        setFormData({
+          title: "",
+          description: "",
+          date: "",
+          time: "",
+          month: "",
+          category: "",
+          hostedBy: user ? user.email : "",
+          location: "",
+          imageUrl: "",
+        });
       }
     } catch (error) {
       console.error(error);
@@ -306,7 +322,7 @@ const CreateEvent = () => {
                       disabled={isUploading}
                       className="bg-green-600 hover:bg-green-700"
                     >
-                      Upload Image
+                      {isUploading ? "Uploading..." : "Upload Image"}
                     </Button>
                     <Button
                       type="button"
@@ -331,6 +347,14 @@ const CreateEvent = () => {
           </form>
         </div>
       </div>
+
+      {/* Success Modal */}
+      <SuccessModal
+        isOpen={isSuccessModalOpen}
+        onClose={() => setIsSuccessModalOpen(false)}
+        successMessage={successMessage}
+        eventId={eventId}
+      />
     </div>
   );
 };
