@@ -26,9 +26,7 @@ export const userUpdate = async (req, res, next) => {
 
     // Handle fullName update
     if (req.body.fullName) {
-      if (req.body.fullName.includes(" ")) {
-        return next(errorHandler(res, 400, "Full name cannot contain spaces"));
-      }
+      
       updateDetail.fullName = req.body.fullName;
     }
 

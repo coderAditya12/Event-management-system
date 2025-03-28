@@ -126,7 +126,7 @@ export const updateEvent = async (req, res, next) => {
     updateMessage,
     image,
   } = req.body;
-  console.log("image", updateMessage);
+  console.log("image why ", updateMessage);
   const userEmail = req.user.email;
   try {
     const existingEvent = await Event.findById(eventId);
@@ -147,7 +147,7 @@ export const updateEvent = async (req, res, next) => {
     if (status) updates.status = status;
     if (hostedBy) updates.hostedBy = hostedBy;
     if (image) {
-      console.log("image", image);
+      console.log("image why 2", image);
       updates.image = image;
     }
     const updatedEvent = await Event.findByIdAndUpdate(eventId, updates, {
@@ -165,12 +165,12 @@ export const updateEvent = async (req, res, next) => {
 export const deleteEvent = async (req, res, next) => {
   if (req.user.id !== req.params.id) {
     return next(
-      errorHandler(res, 403, "You are not allowed to delete this post.")
+      errorHandler(res, 403, "You are not allowed to delete this Event.")
     );
   }
   try {
     await Event.findByIdAndDelete(req.params.eventId);
-    res.status(200).json("Post deleted successfully.");
+    res.status(200).json("event deleted successfully.");
   } catch (error) {
     next(error);
   }

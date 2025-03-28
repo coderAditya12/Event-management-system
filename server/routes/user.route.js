@@ -1,8 +1,8 @@
 import express from "express";
-import { userUpdate } from "../controller/user.controller.js";
 import verifyToken from "../middleware/verify.js";
+import { userUpdate } from "../controller/user.controller.js";
 const route = express.Router();
 
-route.post("/:id/update", verifyToken, userUpdate);
+route.put("/:id/updateProfile", verifyToken, userUpdate);
 
 export default route;

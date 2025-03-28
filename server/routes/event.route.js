@@ -18,6 +18,5 @@ route.post("/:eventId/join", joinEvent);
 route.delete("/:eventId/leave", leaveEvent);
 route.put("/:eventId/update",verifyToken, updateEvent);
 route.delete("/:eventId/:id/delete",verifyToken,deleteEvent);
-
 route.get("/dashboard", verifyToken, getDashboardData);
 export default route;

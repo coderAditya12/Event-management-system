@@ -11,6 +11,7 @@ import Profile from "./pages/Profile";
 import Footer from "./components/Footer";
 import EventDetailPage from "./pages/EventDetails";
 import RedirectIfAuthenticated from "./pages/RedirectIfAuthenticated";
+import UpdateProfile from "./pages/UpdateProfile";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/:eventId/update" element={<UpdateEvent />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/update-profile" element={<UpdateProfile />} />
           </Route>
         </Routes>
         <Footer />
