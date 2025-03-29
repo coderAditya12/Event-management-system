@@ -28,7 +28,7 @@ export const createEvent = async (req, res, next) => {
     });
     return res.status(201).json(newEvent);
   } catch (error) {
-    console.log("error", error);
+ 
     next(error);
   }
 };
@@ -42,7 +42,7 @@ export const getallEvents = async (req, res, next) => {
 };
 export const getEvent = async (req, res, next) => {
   const eventId = req.params.id;
-  console.log(eventId);
+ 
   const singleEvent = await Event.findById(eventId);
   res.status(200).json(singleEvent);
 };
@@ -126,7 +126,7 @@ export const updateEvent = async (req, res, next) => {
     updateMessage,
     image,
   } = req.body;
-  console.log("image why ", updateMessage);
+ 
   const userEmail = req.user.email;
   try {
     const existingEvent = await Event.findById(eventId);
@@ -147,7 +147,7 @@ export const updateEvent = async (req, res, next) => {
     if (status) updates.status = status;
     if (hostedBy) updates.hostedBy = hostedBy;
     if (image) {
-      console.log("image why 2", image);
+      
       updates.image = image;
     }
     const updatedEvent = await Event.findByIdAndUpdate(eventId, updates, {

@@ -6,6 +6,7 @@ import EventCard from "@/components/EventCard";
 import FeatureStep from "@/components/FeatureStep";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { createEventSteps } from "@/data/eventsData";
 
 const LandingPage = () => {
   const [events,setEvents] = useState([]);
@@ -23,63 +24,10 @@ const LandingPage = () => {
     }
     fetchEvents();
   },[])
-  // Sample event data
-  const featuredEvents = [
-    {
-      id: 1,
-      title: "Music Festival",
-      date: "August 15, 2023",
-      location: "San Francisco, CA",
-      image:
-        "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
-    },
-    {
-      id: 2,
-      title: "Food & Wine Expo",
-      date: "September 10, 2023",
-      location: "New York, NY",
-      image:
-        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
-    },
-    {
-      id: 3,
-      title: "Tech Conference",
-      date: "October 5, 2023",
-      location: "Austin, TX",
-      image:
-        "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
-    },
-    {
-      id: 4,
-      title: "Art Exhibition",
-      date: "November 20, 2023",
-      location: "Chicago, IL",
-      image:
-        "https://images.unsplash.com/photo-1531058020387-3be344556be6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
-    },
-  ];
+
 
   // Steps for creating an event
-  const createEventSteps = [
-    {
-      id: 1,
-      title: "Create an Account",
-      description: "Sign up for free and set up your profile.",
-      icon: "users",
-    },
-    {
-      id: 2,
-      title: "Add Event Details",
-      description: "Enter your event information, date, time, and location.",
-      icon: "clipboard",
-    },
-    {
-      id: 3,
-      title: "Customize & Publish",
-      description: "Upload images, set ticket prices, and publish your event.",
-      icon: "rocket",
-    },
-  ];
+
 
   return (
     <div className="min-h-screen bg-gray-50">

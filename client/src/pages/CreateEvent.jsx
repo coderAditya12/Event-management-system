@@ -118,7 +118,7 @@ const CreateEvent = () => {
         { withCredentials: true }
       );
       if (response.status === 201) {
-        console.log(response.data);
+        
         setSuccessMessage(
           response.data.message || "Event created successfully!"
         );
