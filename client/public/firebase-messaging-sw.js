@@ -21,7 +21,6 @@ const messaging = firebase.messaging();
 
 // Handle background messages
 messaging.onBackgroundMessage((payload) => {
-  console.log("[firebase-messaging-sw.js] Received background message", payload);
 
   // Extract notification details
   const notificationTitle = payload.notification?.title || "Event Update";
