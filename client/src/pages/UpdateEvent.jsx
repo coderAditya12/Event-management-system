@@ -187,7 +187,7 @@ const UpdateEvent = () => {
       });
 
       if (response.status === 200) {
-   
+
         toast.success("Event updated successfully!");
 
         // Send notifications only after successful update

@@ -50,7 +50,7 @@ const EventDetailPage = () => {
 
     // Cleanup listener on unmount
     return () => {
-   
+
       unsubscribe();
     };
   }, []); // Empty dependency array ensures this only runs once
@@ -87,7 +87,7 @@ const EventDetailPage = () => {
 
     setSocket(newSocket);
     if (socket) {
-      
+
     }
     return () => {
       newSocket.disconnect();
@@ -129,10 +129,8 @@ const EventDetailPage = () => {
 
   const requestNotificationPermission = async (eventId) => {
     if (notificationSubscribed) {
-      
       return;
     }
-
     try {
       const permission = await Notification.requestPermission();
       const registration = await navigator.serviceWorker.register(
@@ -144,7 +142,7 @@ const EventDetailPage = () => {
             "BGZ82SLKBqhgaUDPj0-y_D1gWRSu34Lz_bpfWEd3Xj-8-s0_WTeho3nQvt8h2Od4Qb9t33Eert5vaMWkMkM7o2M",
           registration,
         });
-       
+
         const response = await axios.post(
           `/api/${eventId}/subscribe`,
           {
@@ -155,7 +153,6 @@ const EventDetailPage = () => {
           { withCredentials: true }
         );
         if (response.status === 200) {
-          
           setNotificationSubscribed(true);
         }
       }
@@ -461,3 +458,4 @@ const EventDetailPage = () => {
 };
 
 export default EventDetailPage;
+

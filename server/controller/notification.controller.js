@@ -73,8 +73,8 @@ export const notify = async (req, res) => {
         );
       }
     });
-    console.log("notification response is", response);
-    console.log(`${response.successCount} notification send successfully`);
+   
+    
 
     res.status(200).json({
       successCount: response.successCount,

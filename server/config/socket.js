@@ -15,19 +15,19 @@ const connectToSocket = (server) => {
 
     socket.on("joinEventRoom", (eventId) => {
       socket.join(eventId);
-      console.log(`User ${socket.id} joined room ${eventId}`);
+
     });
     socket.on("leaveEventRoom", (eventId) => {
       try {
         socket.leave(eventId);
-        console.log(`User ${socket.id} left room ${eventId}`);
+    
       } catch (error) {
         console.error(`Error leaving room ${eventId}:`, error);
       }
     });
 
     socket.on("disconnect", () => {
-      console.log("A user disconnected:", socket.id);
+     
     });
   });
 

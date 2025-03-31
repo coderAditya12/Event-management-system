@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export const signup = async (req, res, next) => {
-  console.log(req.body);
+
   const { fullName, email, password } = req.body;
   if (!fullName || !email || !password) {
     return errorHandler(res, 400, "All fields are required");
@@ -29,10 +29,10 @@ export const login = async (req, res, next) => {
   if (!email || !password) {
     return errorHandler(res, 400, "All fields are required");
   }
-  console.log(password);
+ 
   try {
     const existingUser = await User.findOne({ email });
-    console.log("existing", existingUser);
+ 
     if (!existingUser) return errorHandler(res, 400, "user not found");
     const isMatch = await bcrypt.compare(password, existingUser.password);
 
